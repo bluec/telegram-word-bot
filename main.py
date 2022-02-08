@@ -1,4 +1,5 @@
 import logging
+from strings import RESPONSE_MSG, HELP_MSG, HELLO_MSG, NOT_WORD_MSG
 from word import Word
 from config import BOT_TOKEN
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -12,12 +13,12 @@ logger = logging.getLogger(__name__)
 # context. Error handlers also receive the raised TelegramError object in error.
 def hi(update, context):
     """Send a message when the command /start is issued."""
-    update.message.reply_text('Hi, welcome to the word analysis tool. I think you\'ll like it.')
+    update.message.reply_text(HELLO_MSG)
 
 
 def help(update, context):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+    update.message.reply_text(HELP_MSG)
 
 
 def analyse(update, context):
@@ -25,25 +26,29 @@ def analyse(update, context):
     my_word = Word(update.message.text)
 
     if not my_word.validate():
-        update.message.reply_text("That isn't a word.")
+        update.message.reply_text(NOT_WORD_MSG)
         return
 
-    string = ''
+    unique_letters_string = ''
     for key in my_word.unique_letters:
-        string += ("%d x %s, " % (my_word.unique_letters[key], key))
-    string = string.rstrip(', ') + '.'
-
-    update.message.reply_text("Nice word, I like it.")
-    update.message.reply_text("\"%s\" is %d letters long." % (my_word.word, my_word.length))
-    update.message.reply_text("It has %d vowels and %d consonants." % (my_word.vowels_count, my_word.consonants_count))
-    update.message.reply_text("It contains %d unique letters: %s " % (len(my_word.unique_letters), string))
+        unique_letters_string += ("%d x %s, " % (my_word.unique_letters[key], key))
+    unique_letters_string = unique_letters_string.rstrip(', ')
 
     if len(my_word.most_frequent_letters) > 1:
-        update.message.reply_text("The most frequent letters are %s with %d occurrences each." % (
+        frequent_letters_string = ("letters are %s with %d occurrences each" % (
             ' and '.join(my_word.most_frequent_letters), my_word.most_frequent_letters_count))
     else:
-        update.message.reply_text("The most frequent letter is %s with %d occurrences." % (
+        frequent_letters_string = ("letter is %s with %d occurrences" % (
             ''.join(my_word.most_frequent_letters), my_word.most_frequent_letters_count))
+
+    update.message.reply_text(RESPONSE_MSG.format(my_word.word,
+                                                  my_word.length,
+                                                  my_word.vowels_count,
+                                                  my_word.consonants_count,
+                                                  len(my_word.unique_letters),
+                                                  unique_letters_string,
+                                                  frequent_letters_string
+                                                  ))
 
 
 def error(update, context):
