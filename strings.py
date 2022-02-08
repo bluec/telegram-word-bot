@@ -17,3 +17,8 @@ There is no help.
 HELLO_MSG = """
 Hi, I am the word analysis bot. I love words.
 """
+
+START_MSG = """
+Hello <b>{}</b>! I'm the <b>Amazing Word Bot</b>.
+I love words. Type a word to start.
+"""

@@ -1,7 +1,8 @@
 import logging
-from strings import RESPONSE_MSG, HELP_MSG, HELLO_MSG, NOT_WORD_MSG
+from strings import RESPONSE_MSG, HELP_MSG, HELLO_MSG, NOT_WORD_MSG, START_MSG
 from word import Word
 from config import BOT_TOKEN
+from telegram import ParseMode
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 # Enable logging
@@ -11,17 +12,24 @@ logger = logging.getLogger(__name__)
 
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
-def hi(update, context):
+def start(update, context) -> None:
     """Send a message when the command /start is issued."""
+    first_name = update.effective_user.first_name
+    update.message.reply_text(START_MSG.format(first_name),
+                              parse_mode=ParseMode.HTML)
+
+
+def hi(update, context) -> None:
+    """Send a message when the command /hi is issued."""
     update.message.reply_text(HELLO_MSG)
 
 
-def help(update, context):
+def help(update, context) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text(HELP_MSG)
 
 
-def analyse(update, context):
+def analyse(update, context) -> None:
     """Analyse the user message."""
     my_word = Word(update.message.text)
 
@@ -51,7 +59,7 @@ def analyse(update, context):
                                                   ))
 
 
-def error(update, context):
+def error(update, context) -> None:
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
@@ -68,6 +76,7 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("hi", hi))
+    dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
 
     # on noncommand i.e message - analyse the message on Telegram
