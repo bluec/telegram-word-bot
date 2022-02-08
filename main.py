@@ -29,21 +29,21 @@ def analyse(update, context):
         return
 
     string = ''
-    for key in my_word.letters:
-        string += ("%d x %s, " % (my_word.letters[key], key))
+    for key in my_word.unique_letters:
+        string += ("%d x %s, " % (my_word.unique_letters[key], key))
     string = string.rstrip(', ') + '.'
 
     update.message.reply_text("Nice word, I like it.")
     update.message.reply_text("\"%s\" is %d letters long." % (my_word.word, my_word.length))
-    update.message.reply_text("It has %d vowels and %d consonants." % (my_word.vowels_count, (my_word.length - my_word.vowels_count)))
-    update.message.reply_text("It contains %d unique letters: %s " % (len(my_word.letters), string))
+    update.message.reply_text("It has %d vowels and %d consonants." % (my_word.vowels_count, my_word.consonants_count))
+    update.message.reply_text("It contains %d unique letters: %s " % (len(my_word.unique_letters), string))
 
-    if len(my_word.most_frequent_chars) > 1:
+    if len(my_word.most_frequent_letters) > 1:
         update.message.reply_text("The most frequent letters are %s with %d occurrences each." % (
-        ' and '.join(my_word.most_frequent_chars), my_word.most_frequent_count))
+            ' and '.join(my_word.most_frequent_letters), my_word.most_frequent_letters_count))
     else:
         update.message.reply_text("The most frequent letter is %s with %d occurrences." % (
-        ''.join(my_word.most_frequent_chars), my_word.most_frequent_count))
+            ''.join(my_word.most_frequent_letters), my_word.most_frequent_letters_count))
 
 
 def error(update, context):
