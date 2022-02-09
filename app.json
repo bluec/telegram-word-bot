@@ -1,0 +1,13 @@
+{
+  "name": "Telegram Word Bot",
+  "description": "A simple Telegram bot that analyses a given word, built with python-telegram-bot",
+  "repository": "https://github.com/bluec/telegram-word-bot",
+  "keywords": ["telegram", "bot", "python"],
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Your Telegram bot token",
+      "value": "",
+      "required": true
+    }
+  }
+}
